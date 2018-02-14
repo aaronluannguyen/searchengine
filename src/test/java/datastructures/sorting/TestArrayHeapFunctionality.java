@@ -18,14 +18,15 @@ public class TestArrayHeapFunctionality extends BaseTest {
         return new ArrayHeap<>();
     }
     
-    protected IPriorityQueue<Integer> makeBasicHeap(){
-        IPriorityQueue<Integer> heap = this.makeInstance();
-        heap.insert(1);
-        heap.insert(2);
-        heap.insert(3);
-        heap.insert(4);
-        heap.insert(5);
-        return heap;
+
+    protected IPriorityQueue<Integer> makeBasic() {
+        IPriorityQueue<Integer> basic = this.makeInstance();
+        basic.insert(1);
+        basic.insert(2);
+        basic.insert(3);
+        basic.insert(4);
+        basic.insert(5);
+        return basic;
     }
 
     @Test(timeout=SECOND)
@@ -36,26 +37,37 @@ public class TestArrayHeapFunctionality extends BaseTest {
         assertTrue(!heap.isEmpty());
     }
     
+    public void testForGaps() {
+        
+    }
+    
     @Test(timeout=SECOND)
     public void testEmptyContainerException() {
-        IPriorityQueue<Integer> heap = this.makeInstance();
+        IPriorityQueue<Integer> empty = this.makeInstance();
         try {
-            heap.removeMin();
-            fail("Expected EmptyContainerException");           
-        }catch(EmptyContainerException ex) {
-            //Do nothing: this is expected.
+            empty.removeMin();
+            fail("Expected EmptyContainerException");
+        } catch (EmptyContainerException ex) {
+            // Do nothing: this is ok
         }
     }
     
     @Test(timeout=SECOND)
     public void testSingleRemove() {
-        IPriorityQueue<Integer> heap = this.makeBasicHeap();
-        assertEquals(1, heap.removeMin());
+        IPriorityQueue<Integer> test = this.makeBasic();
+        assertEquals(1, test.removeMin());
     }
     
     @Test(timeout=SECOND)
     public void testRemoveMany() {
+        IPriorityQueue<Integer> test = this.makeInstance();
+        for (int i = 0; i < 250; i++) {
+            test.insert(i);
+        }
         
+        for (int i = 0; i < 250; i++) {
+            assertEquals(i, test.removeMin());
+        }
     }
     
     @Test(timeout=SECOND)
@@ -67,7 +79,7 @@ public class TestArrayHeapFunctionality extends BaseTest {
     
     @Test(timeout=SECOND)
     public void testRemoveEqualElements() {
-        IPriorityQueue<Integer> heap = this.makeBasicHeap();
+        IPriorityQueue<Integer> heap = this.makeBasic();
         heap.insert(1);
         heap.insert(1);        
         
@@ -75,33 +87,42 @@ public class TestArrayHeapFunctionality extends BaseTest {
         assertEquals(1, heap.removeMin());
         assertEquals(1, heap.removeMin());
         assertEquals(2, heap.removeMin());
-                
     }
     
     @Test(timeout=SECOND)
-    public void testPeekMinEmptyContainerException() {
-        IPriorityQueue<Integer> heap = this.makeInstance();
+    public void testPeekMinEmptyContainerException() {            
+        IPriorityQueue<Integer> empty = this.makeInstance();
         try {
-            heap.peekMin();
-            fail("Expected EmptyContainerException");           
-        }catch(EmptyContainerException ex) {
-            //Do nothing: this is expected.
+            empty.peekMin();
+            fail("Expected EmptyContainerException");
+        } catch (EmptyContainerException ex) {
+            // Do nothing: this is ok
         }
     }
     
     @Test(timeout=SECOND)
     public void testPeekMinHeapSizeOne() {
-        
+        IPriorityQueue<Integer> test = this.makeInstance();
+        test.insert(5);
+        assertEquals(5, test.peekMin());
     }
     
     @Test(timeout=SECOND)
     public void testPeekMinMany() {
+        IPriorityQueue<Integer> test = this.makeInstance();
+        for (int i = 0; i < 250; i++) {
+            test.insert(i);
+        }
         
+        for (int i = 0; i < 250; i++) {
+            assertEquals(i, test.peekMin());
+            test.removeMin();
+        }
     }
     
     @Test(timeout=SECOND) 
     public void testPeekMinTie() {
-        IPriorityQueue<Integer> heap = this.makeBasicHeap();
+        IPriorityQueue<Integer> heap = this.makeBasic();
         heap.insert(1);
         heap.insert(1); 
         
@@ -110,7 +131,13 @@ public class TestArrayHeapFunctionality extends BaseTest {
     
     @Test(timeout=SECOND)
     public void testInsertNullException() {
-        
+        IPriorityQueue<Integer> test = this.makeInstance();
+        try {
+            test.insert(null);
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException ex) {
+            // Do nothing: this is ok
+        }
     }
     
     @Test(timeout=SECOND) 
@@ -122,19 +149,47 @@ public class TestArrayHeapFunctionality extends BaseTest {
     }
     
     @Test(timeout=SECOND)
-    public void testInsertMany() {
+    public void testInsertNewMin() {
+        IPriorityQueue<Integer> test = this.makeBasic();
+        test.insert(0);
+        assertEquals(0, test.peekMin());
         
+        test.insert(-5);
+        assertEquals(-5, test.peekMin());
+    }
+    
+    @Test(timeout=SECOND)
+    public void testInsertMany() {
+        IPriorityQueue<Integer> test = this.makeInstance();
+        for (int i = 0; i < 250; i++) {
+            test.insert(i);
+        }
+        
+        for (int i = 0; i < 250; i++) {
+            assertEquals(i, test.removeMin());
+        }
     }
     
     @Test(timeout=SECOND)
     public void testInsertAnEqualElement() {
-        IPriorityQueue<Integer> heap = this.makeBasicHeap();
+        IPriorityQueue<Integer> heap = this.makeBasic();
         heap.insert(1);
         heap.insert(1);
         assertEquals(1, heap.removeMin());
         assertEquals(1, heap.removeMin());
         assertEquals(1, heap.removeMin());
     }
+    public void testInsertManyNewMins() {
+        IPriorityQueue<Integer> test = this.makeInstance();
+        for (int i = 250; i >= 0; i--) {
+            test.insert(i);
+        }
+        
+        for (int i = 0; i <= 250; i++) {
+            assertEquals(i, test.removeMin());
+        }
+    }
+    
     
     @Test(timeout=SECOND)
     public void testSizeZero() {
@@ -151,7 +206,11 @@ public class TestArrayHeapFunctionality extends BaseTest {
     
     @Test(timeout=SECOND) 
     public void testSizeMany() {
-        
+        IPriorityQueue<Integer> test = this.makeInstance();
+        for (int i = 0; i < 250; i++) {
+            test.insert(i);
+            assertEquals(i + 1, test.size());
+        }
     }
     
     @Test(timeout=SECOND)
@@ -162,7 +221,7 @@ public class TestArrayHeapFunctionality extends BaseTest {
     
     @Test(timeout=SECOND)
     public void testIsEmptyFalse() {
-        IPriorityQueue<Integer> heap = this.makeBasicHeap();
+        IPriorityQueue<Integer> heap = this.makeBasic();
         assertFalse(heap.isEmpty());
     }
 }
