@@ -1,8 +1,10 @@
 package datastructures.sorting;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import misc.BaseTest;
+import misc.exceptions.EmptyContainerException;
 import datastructures.concrete.ArrayHeap;
 import datastructures.interfaces.IPriorityQueue;
 import org.junit.Test;
@@ -24,8 +26,19 @@ public class TestArrayHeapFunctionality extends BaseTest {
     }
     
     @Test(timeout=SECOND)
-    public void testEmptyContainerException() {
+    public void testForGaps() {
         
+    }
+    
+    @Test(timeout=SECOND)
+    public void testEmptyContainerException() {
+        IPriorityQueue<Integer> empty = this.makeInstance();
+        try {
+            empty.removeMin();
+            fail("Expected EmptyContainerException");
+        } catch (EmptyContainerException ex) {
+            // Do nothing: this is ok
+        }
     }
     
     @Test(timeout=SECOND)
@@ -75,6 +88,11 @@ public class TestArrayHeapFunctionality extends BaseTest {
     
     @Test(timeout=SECOND) 
     public void testInsertToEmptyHeap() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testInsertNewMin() {
         
     }
     
