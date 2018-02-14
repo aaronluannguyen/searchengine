@@ -22,4 +22,94 @@ public class TestArrayHeapFunctionality extends BaseTest {
         assertEquals(1, heap.size());
         assertTrue(!heap.isEmpty());
     }
+    
+    @Test(timeout=SECOND)
+    public void testEmptyContainerException() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testSingleRemove() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testRemoveMany() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testRemoveFromHeapWithSizeOne() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testRemoveEqualElements() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testPeekMinEmptyContainerException() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testPeekMinHeapSizeOne() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testPeekMinMany() {
+        
+    }
+    
+    @Test(timeout=SECOND) 
+    public void testPeekMinTie() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testInsertNullException() {
+        
+    }
+    
+    @Test(timeout=SECOND) 
+    public void testInsertToEmptyHeap() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testInsertMany() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testInsertAnEqualElement() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testSizeZero() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testSizeOne() {
+        
+    }
+    
+    @Test(timeout=SECOND) 
+    public void testSizeMany() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testIsEmptyTrue() {
+        
+    }
+    
+    @Test(timeout=SECOND)
+    public void testIsEmptyFalse() {
+        
+    }
 }
