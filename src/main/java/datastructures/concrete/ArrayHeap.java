@@ -14,11 +14,13 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     // You may NOT rename this field: we will be inspecting it within
     // our private tests.
     private T[] heap;
+    private int size;
 
     // Feel free to add more fields and constants.
 
     public ArrayHeap() {
-        throw new NotYetImplementedException();
+        heap = makeArrayOfT(0);
+        size = 0;
     }
 
     /**
