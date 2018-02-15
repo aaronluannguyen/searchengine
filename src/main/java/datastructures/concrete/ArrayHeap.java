@@ -1,6 +1,7 @@
 package datastructures.concrete;
 
 import datastructures.interfaces.IPriorityQueue;
+import misc.exceptions.EmptyContainerException;
 import misc.exceptions.NotYetImplementedException;
 
 /**
@@ -19,7 +20,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     // Feel free to add more fields and constants.
 
     public ArrayHeap() {
-        heap = makeArrayOfT(0);
+        heap = makeArrayOfT(20);
         size = 0;
     }
 
@@ -41,25 +42,76 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public T removeMin() {
-        throw new NotYetImplementedException();
+        if(this.size == 0) {
+            throw new EmptyContainerException();
+        }
+        T min = heap[0];
+        if(this.size > 1) {
+            min = heap[this.size - 1];
+            heap = removeMinHelper(0);
+        }
+        this.size--;
+        return min;               
     }
-
+    
+    private T[] removeMinHelper(int index) {
+        int count = 1;
+        T min = heap[index];
+        int minIndex = index;
+        while(heap[(4 * index) + count] != null && count <= 4) {
+            int current = (4 * index) + count;
+            if(leq(heap[current], min)) {
+                min = heap[current];
+                minIndex = current;
+            }
+            count++;
+        }
+        if(minIndex != index) {
+            heap = removeMinHelper(minIndex);
+        }
+        return heap;
+    }
+    
     @Override
     public T peekMin() {
-        throw new NotYetImplementedException();
+        if(this.size == 0) {
+            throw new EmptyContainerException();
+        }
+        return heap[0];
     }
 
     @Override
     public void insert(T item) {
-        throw new NotYetImplementedException();
+        if(item == null) {
+            throw new IllegalArgumentException();
+        }
+        this.size++;
+        heap[this.size - 1] = item;
+        if(this.size > 1) {
+            heap = insertHelper(this.size - 1);
+        }
+        
+    }
+    
+    private T[] insertHelper(int index) {
+        int parentIndex = (index - 1) / 4;
+        if(heap[index].compareTo(heap[parentIndex]) < 0) {
+            T temp = heap[index];
+            heap[index] = heap[parentIndex];
+            heap[parentIndex] = temp;
+            heap = insertHelper(parentIndex);
+        }
+        return heap;
     }
 
     @Override
     public int size() {
-        throw new NotYetImplementedException();
+        return this.size;
     }
     
     private boolean leq(T a, T b) {
         return a.compareTo(b) <= 0;
     }
+    
+    
 }
