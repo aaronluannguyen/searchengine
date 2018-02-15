@@ -1,6 +1,7 @@
 package datastructures.concrete;
 
 import datastructures.interfaces.IPriorityQueue;
+import misc.exceptions.EmptyContainerException;
 import misc.exceptions.NotYetImplementedException;
 
 /**
@@ -41,12 +42,20 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public T removeMin() {
-        throw new NotYetImplementedException();
+        if (this.size == 0) {
+            throw new EmptyContainerException("EmptyContainerException");
+        }
+        
+        
     }
 
     @Override
     public T peekMin() {
-        throw new NotYetImplementedException();
+        if (this.size == 0) {
+            throw new EmptyContainerException("EmptyContainerException");
+        }
+        
+        
     }
 
     @Override
