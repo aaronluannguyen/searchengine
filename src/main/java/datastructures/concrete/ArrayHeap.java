@@ -61,8 +61,9 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         int count = 1;
         T min = heap[index];
         int minIndex = index;
-        while(heap[4 * index + count] != null && count <= 4) {
-            int current = 4 * index + count;
+        int baseIndex = 4 * index;
+        while(baseIndex + count < this.size && heap[baseIndex + count] != null && count <= 4) {
+            int current = baseIndex + count;
             if (leq(heap[current], min)) {
                 min = heap[current];
                 minIndex = current;
@@ -71,6 +72,9 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         }
         
         if (index != minIndex) {
+            T temp = heap[minIndex];
+            heap[minIndex] = heap[index];
+            heap[index] = temp;
             heap = removeMinHelper(minIndex);
         }
         
@@ -93,6 +97,15 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         }
         
         this.size++;
+        
+        if (this.size % 20 == 0) {
+            T[] newHeap = makeArrayOfT(this.size * 2);
+            for (int i = 0; i < this.size; i++) {
+                newHeap[i] = heap[i];
+            }
+            heap = newHeap;
+        }
+        
         heap[this.size - 1] = item;
         
         if (this.size > 1) {
@@ -102,7 +115,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     
     private T[] insertHelper(int index) {
         int parentIndex = (index - 1) / 4;
-        if (heap[index].compareTo(heap[parentIndex]) < 0) {
+        if (leq(heap[index], heap[parentIndex])) {
             T temp = heap[index];
             heap[index] = heap[parentIndex];
             heap[parentIndex] = temp;
@@ -118,6 +131,6 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     }
     
     private boolean leq(T a, T b) {
-        return a.compareTo(b) <= 0;
+        return a.compareTo(b) < 0;
     }
 }
