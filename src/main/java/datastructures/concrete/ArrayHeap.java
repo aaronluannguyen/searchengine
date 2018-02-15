@@ -88,7 +88,28 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public void insert(T item) {
-        throw new NotYetImplementedException();
+        if (item == null) {
+            throw new IllegalArgumentException("IllegalArgumentException: null item");
+        }
+        
+        this.size++;
+        heap[this.size - 1] = item;
+        
+        if (this.size > 1) {
+            heap = insertHelper(this.size - 1);
+        }
+    }
+    
+    private T[] insertHelper(int index) {
+        int parentIndex = (index - 1) / 4;
+        if (heap[index].compareTo(heap[parentIndex]) < 0) {
+            T temp = heap[index];
+            heap[index] = heap[parentIndex];
+            heap[parentIndex] = temp;
+            heap = insertHelper(parentIndex);
+        }
+        
+        return heap;
     }
 
     @Override
