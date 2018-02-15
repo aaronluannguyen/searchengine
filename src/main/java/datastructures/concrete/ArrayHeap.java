@@ -56,4 +56,8 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     public int size() {
         throw new NotYetImplementedException();
     }
+    
+    private boolean leq(T a, T b) {
+        return a.compareTo(b) <= 0;
+    }
 }
