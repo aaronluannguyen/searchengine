@@ -19,7 +19,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     // Feel free to add more fields and constants.
 
     public ArrayHeap() {
-        heap = makeArrayOfT(0);
+        heap = makeArrayOfT(20);
         size = 0;
     }
 
@@ -56,7 +56,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public int size() {
-        throw new NotYetImplementedException();
+        return this.size;
     }
     
     private boolean leq(T a, T b) {
