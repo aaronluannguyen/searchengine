@@ -61,7 +61,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         int count = 1;
         T min = heap[index];
         int minIndex = index;
-        while(heap[4 * index + count] != null && count <= 4) {
+        while((4 * index) + count < size && heap[4 * index + count] != null && count <= 4) {
             int current = 4 * index + count;
             if (leq(heap[current], min)) {
                 min = heap[current];
@@ -71,6 +71,9 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         }
         
         if (index != minIndex) {
+            T temp = heap[index];
+            heap[index] = heap[minIndex];
+            heap[minIndex] = temp;
             heap = removeMinHelper(minIndex);
         }
         
@@ -93,9 +96,15 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     public void insert(T item) {
         if (item == null) {
             throw new IllegalArgumentException("IllegalArgumentException: null item");
-        }
-        
+        }        
         this.size++;
+        if(this.size % 20 == 0) {            
+            T[] temp = heap;
+            heap = makeArrayOfT(this.size * 2);
+            for(int i = 0; i < temp.length; i++) {
+                heap[i] = temp[i];
+            }
+        }
         heap[this.size - 1] = item;
         
         if (this.size > 1) {
