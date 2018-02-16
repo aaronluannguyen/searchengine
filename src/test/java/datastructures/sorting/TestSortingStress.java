@@ -26,22 +26,22 @@ public class TestSortingStress extends BaseTest {
         int limit = 100000;
         IPriorityQueue<Integer> test = this.makeInstance();
         
-        for (int i = limit; i >= 0; i++) {
+        for (int i = limit; i >= 0; i--) {
             test.insert(i);
             assertEquals(i, test.peekMin());
         }
         
         for (int i = 0; i <= limit; i++) {
+            assertFalse(test.isEmpty());
             assertEquals(i, test.peekMin());
             assertEquals(i, test.removeMin());
             assertEquals(limit - i, test.size());
-            assertFalse(test.isEmpty());
         }
         
         assertTrue(test.isEmpty());
     }
     
-    @Test(timeout=10*SECOND)
+    @Test(timeout=15*SECOND)
     public void testStressForTopKSort() {
         int limit = 100000;
         IList<Integer> list = new DoubleLinkedList<>();
