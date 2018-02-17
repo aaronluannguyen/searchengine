@@ -36,6 +36,9 @@ public class Searcher {
             throw new IllegalArgumentException("IllegalArgumentException: k < 0");
         }
         
+        if (k > input.size()) {
+            k = input.size();
+        }
         int kCounter = 0;
         
         ArrayHeap<T> sorter = new ArrayHeap<T>();
