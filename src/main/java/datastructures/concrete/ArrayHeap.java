@@ -2,7 +2,6 @@ package datastructures.concrete;
 
 import datastructures.interfaces.IPriorityQueue;
 import misc.exceptions.EmptyContainerException;
-import misc.exceptions.NotYetImplementedException;
 
 /**
  * See IPriorityQueue for details on what each method must do.
@@ -15,13 +14,13 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     // You may NOT rename this field: we will be inspecting it within
     // our private tests.
     private T[] heap;
-    private int size;
+    private int length;
 
     // Feel free to add more fields and constants.
 
     public ArrayHeap() {
         heap = makeArrayOfT(20);
-        size = 0;
+        length = 0;
     }
 
     /**
@@ -42,18 +41,18 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public T removeMin() {
-        if (this.size == 0) {
+        if (this.length == 0) {
             throw new EmptyContainerException("EmptyContainerException");
         }
         
         T min = heap[0];
         
-        if (this.size > 1) {
-            heap[0] = heap[this.size - 1];
+        if (this.length > 1) {
+            heap[0] = heap[this.length - 1];
             heap = removeMinHelper(0);
         }
         
-        this.size--;
+        this.length--;
         return min;
     }
     
@@ -62,7 +61,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         T min = heap[index];
         int minIndex = index;
         int baseIndex = 4 * index;
-        while(baseIndex + count < this.size && heap[baseIndex + count] != null && count <= 4) {
+        while (baseIndex + count < this.length && heap[baseIndex + count] != null && count <= 4) {
             int current = baseIndex + count;
             if (leq(heap[current], min)) {
                 min = heap[current];
@@ -83,7 +82,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public T peekMin() {
-        if (this.size == 0) {
+        if (this.length == 0) {
             throw new EmptyContainerException("EmptyContainerException");
         }
         
@@ -96,20 +95,20 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
             throw new IllegalArgumentException("IllegalArgumentException: null item");
         }
         
-        this.size++;
+        this.length++;
         
-        if (this.size % 20 == 0) {
-            T[] newHeap = makeArrayOfT(this.size * 2);
-            for (int i = 0; i < this.size; i++) {
+        if (this.length % 20 == 0) {
+            T[] newHeap = makeArrayOfT(this.length * 2);
+            for (int i = 0; i < this.length; i++) {
                 newHeap[i] = heap[i];
             }
             heap = newHeap;
         }
         
-        heap[this.size - 1] = item;
+        heap[this.length - 1] = item;
         
-        if (this.size > 1) {
-            heap = insertHelper(this.size - 1);
+        if (this.length > 1) {
+            heap = insertHelper(this.length - 1);
         }
     }
     
@@ -127,7 +126,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return this.length;
     }
     
     private boolean leq(T a, T b) {

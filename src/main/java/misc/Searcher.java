@@ -1,8 +1,10 @@
 package misc;
 
+
 import datastructures.concrete.ArrayHeap;
 import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IList;
+import datastructures.interfaces.IPriorityQueue;
 
 public class Searcher {
     /**
@@ -39,20 +41,18 @@ public class Searcher {
         if (k > input.size()) {
             k = input.size();
         }
-        int kCounter = 0;
         
-        ArrayHeap<T> sorter = new ArrayHeap<T>();
+        IPriorityQueue<T> sorter = new ArrayHeap<T>();
         for (T item : input) {
-            if (kCounter < k || item.compareTo(sorter.peekMin()) >= 0) {
-                if (kCounter == k)  {
+            if (sorter.size() < k || (sorter.size() > 0 && item.compareTo(sorter.peekMin()) >= 0)) {
+                if (sorter.size() == k)  {
                     sorter.removeMin();
                 }
                 sorter.insert(item);
-                kCounter++;
             }
         }
         
-        DoubleLinkedList<T> result = new DoubleLinkedList<T>();
+        IList<T> result = new DoubleLinkedList<T>();
         for (int i = 0; i < k; i++) {
             result.add(sorter.removeMin());
         }
