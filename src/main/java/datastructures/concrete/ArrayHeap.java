@@ -60,8 +60,8 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         int count = 1;
         T min = heap[index];
         int minIndex = index;
-        int baseIndex = 4 * index;
-        while (baseIndex + count < this.length && heap[baseIndex + count] != null && count <= 4) {
+        int baseIndex = NUM_CHILDREN * index;
+        while (baseIndex + count < this.length && heap[baseIndex + count] != null && count <= NUM_CHILDREN) {
             int current = baseIndex + count;
             if (leq(heap[current], min)) {
                 min = heap[current];
@@ -113,7 +113,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     }
     
     private T[] insertHelper(int index) {
-        int parentIndex = (index - 1) / 4;
+        int parentIndex = (index - 1) / NUM_CHILDREN;
         if (leq(heap[index], heap[parentIndex])) {
             T temp = heap[index];
             heap[index] = heap[parentIndex];
