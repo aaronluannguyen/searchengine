@@ -36,18 +36,25 @@ public class Searcher {
             throw new IllegalArgumentException("IllegalArgumentException: k < 0");
         }
         
+        int kCounter = 0;
+        
         ArrayHeap<T> sorter = new ArrayHeap<T>();
         for (int i = 0; i < input.size(); i++) {
-            sorter.insert(input.get(i));
+            if (sorter.isEmpty()) {
+                sorter.insert(input.get(i));
+                kCounter++;
+            } else if (kCounter < k) {
+                sorter.insert(input.get(i));
+                kCounter++;
+            } else if (kCounter == k && input.get(i).compareTo(sorter.peekMin()) >= 0) {
+                sorter.insert(input.get(i));
+                sorter.removeMin();
+            }
         }
         
         DoubleLinkedList<T> result = new DoubleLinkedList<T>();
-        for (int i = 0; i < input.size(); i++) {
-            if (i < input.size() - k) {
-                sorter.removeMin();
-            } else {
-                result.add(sorter.removeMin());
-            }
+        for (int i = 0; i < k; i++) {
+            result.add(sorter.removeMin());
         }
         
         return result;
