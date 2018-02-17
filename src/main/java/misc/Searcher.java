@@ -42,16 +42,13 @@ public class Searcher {
         int kCounter = 0;
         
         ArrayHeap<T> sorter = new ArrayHeap<T>();
-        for (int i = 0; i < input.size(); i++) {
-            if (sorter.isEmpty()) {
-                sorter.insert(input.get(i));
+        for (T item : input) {
+            if (kCounter < k || item.compareTo(sorter.peekMin()) >= 0) {
+                if (kCounter == k)  {
+                    sorter.removeMin();
+                }
+                sorter.insert(item);
                 kCounter++;
-            } else if (kCounter < k) {
-                sorter.insert(input.get(i));
-                kCounter++;
-            } else if (kCounter == k && input.get(i).compareTo(sorter.peekMin()) >= 0) {
-                sorter.insert(input.get(i));
-                sorter.removeMin();
             }
         }
         
