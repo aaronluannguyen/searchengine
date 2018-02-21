@@ -143,7 +143,42 @@ public class TfIdfAnalyzer {
         //    Add a third field containing that information.
         //
         // 2. See if you can combine or merge one or more loops.
+        IDictionary<String, Double> documentVector = this.documentTfIdfVectors.get(pageUri);
+        IDictionary<String, Double> queryVector = new ChainedHashDictionary<String, Double>();
+        IDictionary<String, Double> queryTfScores = computeTfScores(query);
+        
+        for (KVPair<String, Double> wordScore : queryTfScores) {
+            double idfScore = this.idfScores.get(wordScore.getKey());
+            double tfScore = wordScore.getValue();
+            queryVector.put(wordScore.getKey(), idfScore * tfScore);
+        }
+        
+        double numerator = 0.0;
+        for (String word : query) {
+            double docWordScore = 0.0;
+            if (documentVector.containsKey(word)) {
+                docWordScore = documentVector.get(word);
+            }
+            
+            double queryWordScore = queryVector.get(word);
+            numerator += docWordScore * queryWordScore;
+        }
+        double denominator = norm(documentVector) * norm(queryVector);
+        
+        if (denominator != 0.0) {
+            return numerator / denominator;
+        }
         
         return 0.0;
+    }
+    
+    private Double norm(IDictionary<String, Double> vector) {
+        double output = 0.0;
+        for (KVPair<String, Double> pair : vector) {
+            double score = pair.getValue();
+            output += score * score;
+        }
+        
+        return Math.sqrt(output);
     }
 }
