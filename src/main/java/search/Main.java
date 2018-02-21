@@ -11,7 +11,7 @@ public class Main {
     // The port to serve your web server on.
     // You can ignore this constant. If you're familiar with web development
     // and know what ports are, feel free to change this if it's convenient.
-    public static final int PORT = 8081;
+    public static final int PORT = 8082;
 
     public static void main(String[] args) {
         System.out.println("Indexing web pages...");
