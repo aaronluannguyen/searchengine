@@ -166,8 +166,7 @@ public class TfIdfAnalyzer {
         
         if (denominator != 0.0) {
             return numerator / denominator;
-        }
-        
+        } 
         return 0.0;
     }
     
