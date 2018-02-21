@@ -1,9 +1,8 @@
 package misc;
-
 import datastructures.concrete.ArrayHeap;
 import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IList;
-import misc.exceptions.NotYetImplementedException;
+import datastructures.interfaces.IPriorityQueue;
 
 public class Searcher {
     /**
@@ -32,26 +31,31 @@ public class Searcher {
         //
         // - You should implement this method by using your ArrayHeap for the sake of
         //   efficiency.
-
-        if(k < 0) {
-            throw new IllegalArgumentException();            
+        
+        if (k < 0) {
+            throw new IllegalArgumentException("IllegalArgumentException: k < 0");
         }
         
-        ArrayHeap<T> sorter = new ArrayHeap<T>();
-        DoubleLinkedList<T> result = new DoubleLinkedList<T>();
-        for(int i = 0; i < input.size(); i++) {
-            if(sorter.size() < k || input.get(i).compareTo(o))
-            sorter.insert(input.get(i));
+        if (k > input.size()) {
+            k = input.size();
         }
-        for(int i = 0; i < input.size(); i++) {
-            if(i < input.size() - k) {
-                sorter.removeMin();
-            }else {
-                result.add(sorter.removeMin());
+        
+        IPriorityQueue<T> sorter = new ArrayHeap<T>();
+        for (T item : input) {
+            if (sorter.size() < k || (sorter.size() > 0 && item.compareTo(sorter.peekMin()) >= 0)) {
+                if (sorter.size() == k)  {
+                    sorter.removeMin();
+                }
+                sorter.insert(item);
             }
-        }        
+        }
+        
+        IList<T> result = new DoubleLinkedList<T>();
+        for (int i = 0; i < k; i++) {
+            result.add(sorter.removeMin());
+        }
         
         return result;
-        
+
     }
 }

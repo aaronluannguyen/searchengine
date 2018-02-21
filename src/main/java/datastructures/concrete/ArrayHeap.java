@@ -2,7 +2,6 @@ package datastructures.concrete;
 
 import datastructures.interfaces.IPriorityQueue;
 import misc.exceptions.EmptyContainerException;
-import misc.exceptions.NotYetImplementedException;
 
 /**
  * See IPriorityQueue for details on what each method must do.
@@ -15,13 +14,13 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     // You may NOT rename this field: we will be inspecting it within
     // our private tests.
     private T[] heap;
-    private int size;
+    private int length;
 
     // Feel free to add more fields and constants.
 
     public ArrayHeap() {
         heap = makeArrayOfT(20);
-        size = 0;
+        length = 0;
     }
 
     /**
@@ -42,18 +41,18 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public T removeMin() {
-        if (this.size == 0) {
+        if (this.length == 0) {
             throw new EmptyContainerException("EmptyContainerException");
         }
         
         T min = heap[0];
         
-        if (this.size > 1) {
-            heap[0] = heap[this.size - 1];
+        if (this.length > 1) {
+            heap[0] = heap[this.length - 1];
             heap = removeMinHelper(0);
         }
         
-        this.size--;
+        this.length--;
         return min;
     }
     
@@ -61,8 +60,9 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         int count = 1;
         T min = heap[index];
         int minIndex = index;
-        while((4 * index) + count < size && heap[4 * index + count] != null && count <= 4) {
-            int current = 4 * index + count;
+        int baseIndex = NUM_CHILDREN * index;
+        while (baseIndex + count < this.length && heap[baseIndex + count] != null && count <= NUM_CHILDREN) {
+            int current = baseIndex + count;
             if (leq(heap[current], min)) {
                 min = heap[current];
                 minIndex = current;
@@ -71,9 +71,9 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         }
         
         if (index != minIndex) {
-            T temp = heap[index];
-            heap[index] = heap[minIndex];
-            heap[minIndex] = temp;
+            T temp = heap[minIndex];
+            heap[minIndex] = heap[index];
+            heap[index] = temp;
             heap = removeMinHelper(minIndex);
         }
         
@@ -85,7 +85,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     
     @Override
     public T peekMin() {
-        if (this.size == 0) {
+        if (this.length == 0) {
             throw new EmptyContainerException("EmptyContainerException");
         }
         
@@ -97,24 +97,25 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         if (item == null) {
             throw new IllegalArgumentException("IllegalArgumentException: null item");
         }        
-        this.size++;
-        if(this.size % 20 == 0) {            
-            T[] temp = heap;
-            heap = makeArrayOfT(this.size * 2);
-            for(int i = 0; i < temp.length; i++) {
-                heap[i] = temp[i];
-            }
-        }
-        heap[this.size - 1] = item;
         
-        if (this.size > 1) {
-            heap = insertHelper(this.size - 1);
+        if (this.length % 20 == 0) {
+            T[] newHeap = makeArrayOfT(this.length * 2);
+            for (int i = 0; i < this.length; i++) {
+                newHeap[i] = heap[i];
+            }
+            heap = newHeap;
+        }
+        
+        heap[this.length - 1] = item;
+        
+        if (this.length > 1) {
+            heap = insertHelper(this.length - 1);
         }
     }
     
     private T[] insertHelper(int index) {
-        int parentIndex = (index - 1) / 4;
-        if (heap[index].compareTo(heap[parentIndex]) < 0) {
+        int parentIndex = (index - 1) / NUM_CHILDREN;
+        if (leq(heap[index], heap[parentIndex])) {
             T temp = heap[index];
             heap[index] = heap[parentIndex];
             heap[parentIndex] = temp;
@@ -126,11 +127,11 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return this.length;
     }
     
     private boolean leq(T a, T b) {
-        return a.compareTo(b) <= 0;
+        return a.compareTo(b) < 0;
     }
     
     

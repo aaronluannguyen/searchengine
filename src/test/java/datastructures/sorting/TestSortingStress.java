@@ -39,22 +39,25 @@ public class TestSortingStress extends BaseTest {
             assertFalse(test.isEmpty());
             assertEquals(i, test.peekMin());
             assertEquals(i, test.removeMin());
-            assertEquals(limit - i, test.size());            
+            assertEquals(limit - i, test.size());                        
         }
         
         assertTrue(test.isEmpty());
     }
     
-    @Test(timeout=15*SECOND)
+    
+    // Test code and see if it can detect slower methods
+    @Test(timeout=10*SECOND)
+
     public void testStressForTopKSort() {
         int limit = 100000;
         IList<Integer> list = new DoubleLinkedList<>();
-        for(int i = 0; i < limit; i++) {
+        for (int i = 0; i < limit; i++) {
             list.add(i);
         }
-        IList<Integer> top = Searcher.topKSort(50000, list);
-        for(int i = 0 ; i < top.size(); i++) {
-            assertEquals(50000 + i, top.get(i));
+        IList<Integer> top = Searcher.topKSort(25000, list);
+        for (int i = 0; i < top.size(); i++) {
+            assertEquals(75000 + i, top.get(i));
         }
     }
 }

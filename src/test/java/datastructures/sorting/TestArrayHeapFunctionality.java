@@ -37,8 +37,16 @@ public class TestArrayHeapFunctionality extends BaseTest {
         assertTrue(!heap.isEmpty());
     }
     
+    @Test(timeout=SECOND)
     public void testForGaps() {
+        IPriorityQueue<Integer> test = this.makeInstance();
+        for (int i = 0; i < 50; i++) {
+            test.insert(i);
+        }
         
+        for (int i = 0; i < 50; i++) {
+            assertEquals(i, test.removeMin());
+        }
     }
     
     @Test(timeout=SECOND)
