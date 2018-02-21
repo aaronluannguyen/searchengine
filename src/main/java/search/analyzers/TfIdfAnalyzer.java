@@ -1,5 +1,6 @@
 package search.analyzers;
 
+import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IDictionary;
 import datastructures.interfaces.IList;
 import datastructures.interfaces.ISet;
@@ -57,7 +58,30 @@ public class TfIdfAnalyzer {
      * in every single document to their IDF score.
      */
     private IDictionary<String, Double> computeIdfScores(ISet<Webpage> pages) {
-        throw new NotYetImplementedException();
+        IDictionary<String, Double> result = new ChainedHashDictionary<String, Double>();
+        int totalDocs = pages.size();
+        
+        for(Webpage page : pages) {
+            IList<String> words = page.getWords();
+            for(String word : words) {
+                if(!result.containsKey(word)) {
+                    double value = Math.log(totalDocs);
+                    result.put(word, value);
+                }else {
+                    double existingIdf = result.get(word);
+                    double newIdf = getNewIdf(existingIdf, totalDocs);
+                    result.put(word, newIdf);
+                }
+            }
+        }
+        return result;
+    }
+    
+    private Double getNewIdf(double num, int totalDocs) {
+        double result = Math.exp(num);
+        result = Math.pow(result / totalDocs, -1) + 1;
+        result = Math.log(totalDocs / result);
+        return result;
     }
 
     /**
