@@ -1,5 +1,6 @@
 package search.analyzers;
 
+import datastructures.concrete.KVPair;
 import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IDictionary;
 import datastructures.interfaces.IList;
@@ -113,6 +114,18 @@ public class TfIdfAnalyzer {
         // Hint: this method should use the idfScores field and
         // call the computeTfScores(...) method.
         IDictionary<URI, IDictionary<String, Double>> result = new ChainedHashDictionary<URI, IDictionary<String, Double>>();
+        for (Webpage page : pages) {
+            URI pageUri = page.getUri();
+            IDictionary<String, Double> tfScores = computeTfScores(page.getWords());
+            IDictionary<String, Double> pageResult = new ChainedHashDictionary<String, Double>();
+            for (KVPair<String, Double> wordScore : tfScores) {
+                double idfScore = idfScores.get(wordScore.getKey());
+                double tfScore = wordScore.getValue();
+                pageResult.put(wordScore.getKey(), idfScore * tfScore);
+            }
+            result.put(pageUri, pageResult);
+        }
+        return result;
     }
 
     /**
