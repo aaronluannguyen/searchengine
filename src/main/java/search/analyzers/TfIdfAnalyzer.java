@@ -38,7 +38,7 @@ public class TfIdfAnalyzer {
         // on this class.
 
         this.idfScores = this.computeIdfScores(webpages);
-        //this.documentTfIdfVectors = this.computeAllDocumentTfIdfVectors(webpages);
+        this.documentTfIdfVectors = this.computeAllDocumentTfIdfVectors(webpages);
     }
 
     // Note: this method, strictly speaking, doesn't need to exist. However,
@@ -119,7 +119,7 @@ public class TfIdfAnalyzer {
             IDictionary<String, Double> tfScores = computeTfScores(page.getWords());
             IDictionary<String, Double> pageResult = new ChainedHashDictionary<String, Double>();
             for (KVPair<String, Double> wordScore : tfScores) {
-                double idfScore = idfScores.get(wordScore.getKey());
+                double idfScore = this.idfScores.get(wordScore.getKey());
                 double tfScore = wordScore.getValue();
                 pageResult.put(wordScore.getKey(), idfScore * tfScore);
             }
@@ -143,6 +143,7 @@ public class TfIdfAnalyzer {
         //    Add a third field containing that information.
         //
         // 2. See if you can combine or merge one or more loops.
+        
         return 0.0;
     }
 }
