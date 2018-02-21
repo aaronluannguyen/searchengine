@@ -36,7 +36,7 @@ public class TfIdfAnalyzer {
         // You should uncomment these lines when you're ready to begin working
         // on this class.
 
-        //this.idfScores = this.computeIdfScores(webpages);
+        this.idfScores = this.computeIdfScores(webpages);
         //this.documentTfIdfVectors = this.computeAllDocumentTfIdfVectors(webpages);
     }
 
@@ -67,8 +67,8 @@ public class TfIdfAnalyzer {
                     double initialValue = Math.log(totalDocs);
                     result.put(word, initialValue);
                 } else {
-                    double existingIdf = result.get(word);
-                    double newIdf = getNewIdf(existingIdf, totalDocs);
+                    double oldIdf = result.get(word);
+                    double newIdf = getNewIdf(oldIdf, totalDocs);
                     result.put(word, newIdf);
                 }
             }
@@ -90,7 +90,20 @@ public class TfIdfAnalyzer {
      * The input list represents the words contained within a single document.
      */
     private IDictionary<String, Double> computeTfScores(IList<String> words) {
-        throw new NotYetImplementedException();
+        IDictionary<String, Double> result = new ChainedHashDictionary<String, Double>();
+        int totalWords = words.size();
+        for (String word : words) {
+            if (!result.containsKey(word)) {
+                double newTfScore = 1 / totalWords;
+                result.put(word, newTfScore);
+            } else {
+                double oldTfScore = result.get(word);
+                double newTfScore = oldTfScore * totalWords;
+                newTfScore = (newTfScore + 1) / totalWords;
+                result.put(word, newTfScore);
+            }
+        }
+        return result;
     }
 
     /**
@@ -99,7 +112,7 @@ public class TfIdfAnalyzer {
     private IDictionary<URI, IDictionary<String, Double>> computeAllDocumentTfIdfVectors(ISet<Webpage> pages) {
         // Hint: this method should use the idfScores field and
         // call the computeTfScores(...) method.
-        throw new NotYetImplementedException();
+        IDictionary<URI, IDictionary<String, Double>> result = new ChainedHashDictionary<URI, IDictionary<String, Double>>();
     }
 
     /**
