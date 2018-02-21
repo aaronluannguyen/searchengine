@@ -6,12 +6,12 @@ public class Main {
     public static final String DATA_FOLDER_NAME = "gutenberg";
 
     // The name of your search engine (feel free to change this).
-    public static final String SITE_TITLE = "Noodle";
+    public static final String SITE_TITLE = "Ani's Bitch Ass Search Engine";
 
     // The port to serve your web server on.
     // You can ignore this constant. If you're familiar with web development
     // and know what ports are, feel free to change this if it's convenient.
-    public static final int PORT = 8080;
+    public static final int PORT = 8081;
 
     public static void main(String[] args) {
         System.out.println("Indexing web pages...");
