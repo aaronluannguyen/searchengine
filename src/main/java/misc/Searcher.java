@@ -40,6 +40,7 @@ public class Searcher {
         ArrayHeap<T> sorter = new ArrayHeap<T>();
         DoubleLinkedList<T> result = new DoubleLinkedList<T>();
         for(int i = 0; i < input.size(); i++) {
+            if(sorter.size() < k || input.get(i).compareTo(o))
             sorter.insert(input.get(i));
         }
         for(int i = 0; i < input.size(); i++) {
