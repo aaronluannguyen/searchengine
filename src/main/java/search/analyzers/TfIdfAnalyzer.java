@@ -1,5 +1,6 @@
 package search.analyzers;
 
+import datastructures.concrete.KVPair;
 import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IDictionary;
 import datastructures.interfaces.IList;
@@ -91,7 +92,21 @@ public class TfIdfAnalyzer {
      * The input list represents the words contained within a single document.
      */
     private IDictionary<String, Double> computeTfScores(IList<String> words) {
-        throw new NotYetImplementedException();
+        int totalWords = words.size();
+        IDictionary<String, Double> result = new ChainedHashDictionary<String, Double>();
+        for(String word : words) {
+            if(!result.containsKey(word)) {
+                double value = 1 / totalWords;
+                result.put(word, value);
+            }else {
+                double existingTf = result.get(word);
+                double newTf = (existingTf * totalWords) + 1;
+                newTf = newTf / totalWords;
+                result.put(word, newTf);
+            }
+        }
+        return result;       
+        
     }
 
     /**
@@ -100,7 +115,19 @@ public class TfIdfAnalyzer {
     private IDictionary<URI, IDictionary<String, Double>> computeAllDocumentTfIdfVectors(ISet<Webpage> pages) {
         // Hint: this method should use the idfScores field and
         // call the computeTfScores(...) method.
-        throw new NotYetImplementedException();
+        IDictionary<URI, IDictionary<String, Double>> result = new ChainedHashDictionary<URI, IDictionary<String, Double>>();
+        for(Webpage page : pages) {
+            URI pageURI = page.getUri();     
+            IDictionary<String, Double> resultValue = new ChainedHashDictionary<String, Double>();
+            IDictionary<String, Double> tfScores = computeTfScores(page.getWords());   
+            for(KVPair<String, Double> wordScore : tfScores) {
+                double idfScore = idfScores.get(wordScore.getKey());
+                double tfScore = wordScore.getValue();
+                resultValue.put(wordScore.getKey(), idfScore * tfScore);
+            }
+            result.put(pageURI, resultValue);
+        }
+        return result;
     }
 
     /**
