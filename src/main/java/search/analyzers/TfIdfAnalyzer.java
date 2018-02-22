@@ -96,17 +96,17 @@ public class TfIdfAnalyzer {
      */
     private IDictionary<String, Double> computeTfScores(IList<String> words) {
         IDictionary<String, Double> result = new ChainedHashDictionary<String, Double>();
-        int totalWords = words.size();
+        int totalWords = words.size();        
         for (String word : words) {
             if (!result.containsKey(word)) {
-                double newTfScore = 1 / totalWords;
-                result.put(word, newTfScore);
+                double newTfScore = 1.0 / totalWords;
+                result.put(word, newTfScore);               
             } else {
                 double oldTfScore = result.get(word);
                 double newTfScore = oldTfScore * totalWords;
                 newTfScore = (newTfScore + 1) / totalWords;
                 result.put(word, newTfScore);
-            }
+            }                        
         }
         return result;
     }
@@ -150,23 +150,19 @@ public class TfIdfAnalyzer {
         IDictionary<String, Double> documentVector = this.documentTfIdfVectors.get(pageUri);
         IDictionary<String, Double> queryVector = new ChainedHashDictionary<String, Double>();
         IDictionary<String, Double> queryTfScores = computeTfScores(query);
-        
+        double numerator = 0.0;
         for (KVPair<String, Double> wordScore : queryTfScores) {
+            double docWordScore = 0.0;
             double idfScore = this.idfScores.get(wordScore.getKey());
             double tfScore = wordScore.getValue();
-            queryVector.put(wordScore.getKey(), idfScore * tfScore);
-        }
-        
-        double numerator = 0.0;
-        for (String word : query) {
-            double docWordScore = 0.0;
-            if (documentVector.containsKey(word)) {
-                docWordScore = documentVector.get(word);
+            double queryWordScore = idfScore * tfScore;
+            queryVector.put(wordScore.getKey(), queryWordScore);
+            if (documentVector.containsKey(wordScore.getKey())) {
+                docWordScore = documentVector.get(wordScore.getKey());
             }
-            
-            double queryWordScore = queryVector.get(word);
             numerator += docWordScore * queryWordScore;
         }
+
         double denominator = norm(documentVector) * norm(queryVector);
         
         if (denominator != 0.0) {
