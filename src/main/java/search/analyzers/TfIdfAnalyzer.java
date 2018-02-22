@@ -37,8 +37,8 @@ public class TfIdfAnalyzer {
         // You should uncomment these lines when you're ready to begin working
         // on this class.
 
-        //this.idfScores = this.computeIdfScores(webpages);
-        //this.documentTfIdfVectors = this.computeAllDocumentTfIdfVectors(webpages);
+        this.idfScores = this.computeIdfScores(webpages);
+        this.documentTfIdfVectors = this.computeAllDocumentTfIdfVectors(webpages);
     }
 
     // Note: this method, strictly speaking, doesn't need to exist. However,
@@ -64,24 +64,30 @@ public class TfIdfAnalyzer {
         
         for(Webpage page : pages) {
             IList<String> words = page.getWords();
+            Boolean foundInPage = false;
             for(String word : words) {
                 if(!result.containsKey(word)) {
                     double value = Math.log(totalDocs);
                     result.put(word, value);
-                }else {
+                    foundInPage = true;
+                }else if(!foundInPage){                    
                     double existingIdf = result.get(word);
                     double newIdf = getNewIdf(existingIdf, totalDocs);
                     result.put(word, newIdf);
+                    foundInPage = true;
                 }
             }
-        }
+        }        
         return result;
     }
     
     private Double getNewIdf(double num, int totalDocs) {
-        double result = Math.exp(num);
-        result = Math.pow(result / totalDocs, -1) + 1;
-        result = Math.log(totalDocs / result);
+        double inside = Math.exp(num);
+        double removeTotal = inside / totalDocs;
+        double denominator = Math.pow(removeTotal, -1) + 1;
+        double result = Math.log(totalDocs / denominator);
+        
+        System.out.println(result);
         return result;
     }
 
@@ -101,10 +107,10 @@ public class TfIdfAnalyzer {
             }else {
                 double existingTf = result.get(word);
                 double newTf = (existingTf * totalWords) + 1;
-                newTf = newTf / totalWords;
+                newTf = newTf / totalWords;                
                 result.put(word, newTf);
             }
-        }
+        }        
         return result;       
         
     }
@@ -121,7 +127,7 @@ public class TfIdfAnalyzer {
             IDictionary<String, Double> resultValue = new ChainedHashDictionary<String, Double>();
             IDictionary<String, Double> tfScores = computeTfScores(page.getWords());   
             for(KVPair<String, Double> wordScore : tfScores) {
-                double idfScore = idfScores.get(wordScore.getKey());
+                double idfScore = this.idfScores.get(wordScore.getKey());
                 double tfScore = wordScore.getValue();
                 resultValue.put(wordScore.getKey(), idfScore * tfScore);
             }
@@ -145,6 +151,39 @@ public class TfIdfAnalyzer {
         //    Add a third field containing that information.
         //
         // 2. See if you can combine or merge one or more loops.
+        IDictionary<String, Double> documentVector = this.documentTfIdfVectors.get(pageUri);
+        IDictionary<String, Double> queryVector = new ChainedHashDictionary<String, Double>();
+        IDictionary<String, Double> queryTfScores = computeTfScores(query);
+        
+        for(KVPair<String, Double> wordScore : queryTfScores) {
+            double idfScore = this.idfScores.get(wordScore.getKey());
+            double tfScore = wordScore.getValue();
+            queryVector.put(wordScore.getKey(), idfScore * tfScore);
+        }
+        
+        double numerator = 0.0;
+        for(String word : query) {
+            double docWordScore = 0.0;
+            if(documentVector.containsKey(word)) {
+                docWordScore = documentVector.get(word);
+            }
+            double queryWordScore = queryVector.get(word);
+            numerator += docWordScore * queryWordScore;            
+        }
+        
+        double denominator = norm(documentVector) * norm(queryVector);
+        if(denominator != 0) {
+            return numerator/denominator;
+        }
         return 0.0;
+    }
+    
+    private double norm(IDictionary<String, Double> vector) {
+        double output = 0.0;
+        for(KVPair<String, Double> pair : vector) {
+            double score = pair.getValue();
+            output += score * score;
+        }
+        return Math.sqrt(output);
     }
 }
