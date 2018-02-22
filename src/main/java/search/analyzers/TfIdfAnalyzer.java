@@ -1,5 +1,6 @@
 package search.analyzers;
 
+import datastructures.concrete.ChainedHashSet;
 import datastructures.concrete.KVPair;
 import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IDictionary;
@@ -61,15 +62,19 @@ public class TfIdfAnalyzer {
         IDictionary<String, Double> result = new ChainedHashDictionary<String, Double>();
         int totalDocs = pages.size();
         for (Webpage page : pages) {
+            ISet<String> seen = new ChainedHashSet<String>();
             IList<String> words = page.getWords();
             for (String word : words) {
-                if (!result.containsKey(word)) {
-                    double initialValue = Math.log(totalDocs);
-                    result.put(word, initialValue);
-                } else {
-                    double oldIdf = result.get(word);
-                    double newIdf = getNewIdf(oldIdf, totalDocs);
-                    result.put(word, newIdf);
+                if (!seen.contains(word)) {
+                    seen.add(word);
+                    if (!result.containsKey(word)) {
+                        double initialValue = Math.log(totalDocs);
+                        result.put(word, initialValue);
+                    } else {
+                        double oldIdf = result.get(word);
+                        double newIdf = getNewIdf(oldIdf, totalDocs);
+                        result.put(word, newIdf);
+                    }
                 }
             }
         }
@@ -78,7 +83,7 @@ public class TfIdfAnalyzer {
     
     private double getNewIdf(double num, int totalDocs) {
         double result = Math.exp(num);
-        result = Math.pow(result / totalDocs, -1) + 1;
+        result = Math.pow(result / totalDocs, -1) + 1.0;
         result = Math.log(totalDocs / result);
         return result;
     }
