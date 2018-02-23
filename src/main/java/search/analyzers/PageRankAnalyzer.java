@@ -106,7 +106,6 @@ public class PageRankAnalyzer {
         for (KVPair<URI, ISet<URI>> pair : graph) {
             URI uri = pair.getKey();
             oldScores.put(uri, 1.0 / totalPages);
-            newScores.put(uri, 0.0);
         }
         
         for (int i = 0; i < limit; i++) {
@@ -141,6 +140,7 @@ public class PageRankAnalyzer {
                 return newScores;
             }
             oldScores = newScores;
+            newScores = new ChainedHashDictionary<URI, Double>();
         }
         return newScores;
     }
