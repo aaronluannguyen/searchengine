@@ -1,5 +1,6 @@
 package search.analyzers;
 
+import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IDictionary;
 import datastructures.interfaces.ISet;
 import misc.exceptions.NotYetImplementedException;
@@ -57,7 +58,8 @@ public class PageRankAnalyzer {
      * entirely "self-contained".
      */
     private IDictionary<URI, ISet<URI>> makeGraph(ISet<Webpage> webpages) {
-        throw new NotYetImplementedException();
+        IDictionary<URI, ISet<URI>> result = new ChainedHashDictionary<URI, ISet<URI>>();
+        
     }
 
     /**
