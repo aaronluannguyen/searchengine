@@ -99,7 +99,7 @@ public class TfIdfAnalyzer {
         int totalWords = words.size();
         for (String word : words) {
             if (!result.containsKey(word)) {
-                double newTfScore = 1 / totalWords;
+                double newTfScore = 1.0 / totalWords;
                 result.put(word, newTfScore);
             } else {
                 double oldTfScore = result.get(word);
@@ -151,22 +151,20 @@ public class TfIdfAnalyzer {
         IDictionary<String, Double> queryVector = new ChainedHashDictionary<String, Double>();
         IDictionary<String, Double> queryTfScores = computeTfScores(query);
         
+        double numerator = 0.0;
         for (KVPair<String, Double> wordScore : queryTfScores) {
             double idfScore = this.idfScores.get(wordScore.getKey());
             double tfScore = wordScore.getValue();
-            queryVector.put(wordScore.getKey(), idfScore * tfScore);
-        }
-        
-        double numerator = 0.0;
-        for (String word : query) {
-            double docWordScore = 0.0;
-            if (documentVector.containsKey(word)) {
-                docWordScore = documentVector.get(word);
-            }
+            double queryWordScore = idfScore * tfScore;
+            queryVector.put(wordScore.getKey(), queryWordScore);
             
-            double queryWordScore = queryVector.get(word);
+            double docWordScore = 0.0;
+            if (documentVector.containsKey(wordScore.getKey())) {
+                docWordScore = documentVector.get(wordScore.getKey());
+            }
             numerator += docWordScore * queryWordScore;
         }
+        
         double denominator = norm(documentVector) * norm(queryVector);
         
         if (denominator != 0.0) {
