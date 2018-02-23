@@ -100,7 +100,7 @@ public class TfIdfAnalyzer {
         for (String word : words) {
             if (!result.containsKey(word)) {
                 double newTfScore = 1.0 / totalWords;
-                result.put(word, newTfScore);               
+                result.put(word, newTfScore);
             } else {
                 double oldTfScore = result.get(word);
                 double newTfScore = oldTfScore * totalWords;
@@ -117,7 +117,8 @@ public class TfIdfAnalyzer {
     private IDictionary<URI, IDictionary<String, Double>> computeAllDocumentTfIdfVectors(ISet<Webpage> pages) {
         // Hint: this method should use the idfScores field and
         // call the computeTfScores(...) method.
-        IDictionary<URI, IDictionary<String, Double>> result = new ChainedHashDictionary<URI, IDictionary<String, Double>>();
+        IDictionary<URI, IDictionary<String, Double>> result = 
+                new ChainedHashDictionary<URI, IDictionary<String, Double>>();
         for (Webpage page : pages) {
             URI pageUri = page.getUri();
             IDictionary<String, Double> tfScores = computeTfScores(page.getWords());
@@ -150,6 +151,7 @@ public class TfIdfAnalyzer {
         IDictionary<String, Double> documentVector = this.documentTfIdfVectors.get(pageUri);
         IDictionary<String, Double> queryVector = new ChainedHashDictionary<String, Double>();
         IDictionary<String, Double> queryTfScores = computeTfScores(query);
+        
         double numerator = 0.0;
         for (KVPair<String, Double> wordScore : queryTfScores) {
             double docWordScore = 0.0;
@@ -157,12 +159,13 @@ public class TfIdfAnalyzer {
             double tfScore = wordScore.getValue();
             double queryWordScore = idfScore * tfScore;
             queryVector.put(wordScore.getKey(), queryWordScore);
+                        
             if (documentVector.containsKey(wordScore.getKey())) {
                 docWordScore = documentVector.get(wordScore.getKey());
             }
             numerator += docWordScore * queryWordScore;
         }
-
+       
         double denominator = norm(documentVector) * norm(queryVector);
         
         if (denominator != 0.0) {
