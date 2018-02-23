@@ -1,7 +1,9 @@
 package search.analyzers;
 
+import datastructures.concrete.ChainedHashSet;
 import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IDictionary;
+import datastructures.interfaces.IList;
 import datastructures.interfaces.ISet;
 import misc.exceptions.NotYetImplementedException;
 import search.models.Webpage;
@@ -59,7 +61,23 @@ public class PageRankAnalyzer {
      */
     private IDictionary<URI, ISet<URI>> makeGraph(ISet<Webpage> webpages) {
         IDictionary<URI, ISet<URI>> result = new ChainedHashDictionary<URI, ISet<URI>>();
-        // test
+        ISet<URI> possiblePages = new ChainedHashSet<URI>();
+        
+        for (Webpage page : webpages) {
+            possiblePages.add(page.getUri());
+        }
+        
+        for (Webpage page : webpages) {
+            ISet<URI> links = new ChainedHashSet<URI>();
+            IList<URI> inPageLinks = page.getLinks();
+            for (URI uri : inPageLinks) {
+                if (uri != page.getUri() && possiblePages.contains(uri)) {
+                    links.add(uri);
+                }
+            }
+            result.put(page.getUri(), links);
+        }
+        
         return result;
     }
 
