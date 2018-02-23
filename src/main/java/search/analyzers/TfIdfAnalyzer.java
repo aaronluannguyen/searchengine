@@ -117,7 +117,8 @@ public class TfIdfAnalyzer {
     private IDictionary<URI, IDictionary<String, Double>> computeAllDocumentTfIdfVectors(ISet<Webpage> pages) {
         // Hint: this method should use the idfScores field and
         // call the computeTfScores(...) method.
-        IDictionary<URI, IDictionary<String, Double>> result = new ChainedHashDictionary<URI, IDictionary<String, Double>>();
+        IDictionary<URI, IDictionary<String, Double>> result = 
+                new ChainedHashDictionary<URI, IDictionary<String, Double>>();
         for (Webpage page : pages) {
             URI pageUri = page.getUri();
             IDictionary<String, Double> tfScores = computeTfScores(page.getWords());

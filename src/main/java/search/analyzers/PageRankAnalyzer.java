@@ -59,7 +59,8 @@ public class PageRankAnalyzer {
      */
     private IDictionary<URI, ISet<URI>> makeGraph(ISet<Webpage> webpages) {
         IDictionary<URI, ISet<URI>> result = new ChainedHashDictionary<URI, ISet<URI>>();
-        
+
+        return result;
     }
 
     /**
