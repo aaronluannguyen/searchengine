@@ -115,12 +115,11 @@ public class PageRankAnalyzer {
                 double sum = 0.0;
                 for (KVPair<URI, ISet<URI>> insidePair : graph) {
                     URI insideUri = insidePair.getKey();
-                    if (insideUri != uri) {
-                        if (graph.get(insideUri).isEmpty()) {
-                            sum += decay * oldScores.get(insideUri) / totalPages;
-                        } else if (graph.get(insideUri).contains(uri)) {
-                            sum += decay * oldScores.get(insideUri) / graph.get(insideUri).size();
-                        }
+                    if (graph.get(insideUri).isEmpty()) {
+                        sum += decay * oldScores.get(insideUri) / totalPages;
+                    } 
+                    if (graph.get(insideUri).contains(uri)) {
+                        sum += decay * oldScores.get(insideUri) / graph.get(insideUri).size();
                     }
                 }
                 sum += (1.0 - decay) / totalPages;
