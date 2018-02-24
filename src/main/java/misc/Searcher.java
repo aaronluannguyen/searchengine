@@ -56,7 +56,7 @@ public class Searcher {
         for (int i = 0; i < k; i++) {
             result.add(sorter.removeMin());
         }
-        // test
+        
         return result;
     }
 }
