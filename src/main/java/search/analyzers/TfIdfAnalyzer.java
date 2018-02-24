@@ -28,6 +28,7 @@ public class TfIdfAnalyzer {
     private IDictionary<URI, IDictionary<String, Double>> documentTfIdfVectors;
 
     // Feel free to add extra fields and helper methods.
+    private IDictionary<URI, Double> normOfAllUris;
 
     public TfIdfAnalyzer(ISet<Webpage> webpages) {
         // Implementation note: We have commented these method calls out so your
@@ -39,6 +40,7 @@ public class TfIdfAnalyzer {
 
         this.idfScores = this.computeIdfScores(webpages);
         this.documentTfIdfVectors = this.computeAllDocumentTfIdfVectors(webpages);
+        this.normOfAllUris = getNormOfDocVector(this.documentTfIdfVectors);
     }
 
     // Note: this method, strictly speaking, doesn't need to exist. However,
@@ -166,7 +168,7 @@ public class TfIdfAnalyzer {
             numerator += docWordScore * queryWordScore;
         }
         
-        double denominator = norm(documentVector) * norm(queryVector);
+        double denominator = this.normOfAllUris.get(pageUri) * norm(queryVector);
         
         if (denominator != 0.0) {
             return numerator / denominator;
@@ -184,8 +186,8 @@ public class TfIdfAnalyzer {
         return Math.sqrt(output);
     }
     
-    private IDictionary<String, Double> getNormOfDocVector(IDictionary<URI, IDictionary<String, Double>> docVector) {
-        IDictionary<String, Double> result = new ChainedHashDictionary<String, Double>();
+    private IDictionary<URI, Double> getNormOfDocVector(IDictionary<URI, IDictionary<String, Double>> docVector) {
+        IDictionary<URI, Double> result = new ChainedHashDictionary<URI, Double>();
         for (KVPair<URI, IDictionary<String, Double>> uriPair : docVector) {
             double score = norm(docVector.get(uriPair.getKey()));
             result.put(uriPair.getKey(), score);
