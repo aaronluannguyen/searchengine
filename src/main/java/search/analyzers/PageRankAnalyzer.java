@@ -110,6 +110,7 @@ public class PageRankAnalyzer {
         
         for (int i = 0; i < limit; i++) {
             // Step 2: The update step should go here
+            boolean converged = true;
             for (KVPair<URI, ISet<URI>> pair : graph) {
                 URI uri = pair.getKey();
                 double sum = 0.0;
@@ -124,17 +125,22 @@ public class PageRankAnalyzer {
                 }
                 sum += (1.0 - decay) / totalPages;
                 newScores.put(uri, sum);
-            }
-            
-            // Step 3: the convergence step should go here.
-            // Return early if we've converged.
-            boolean converged = true;
-            for (KVPair<URI, Double> score : oldScores) {
-                double diff = Math.abs(score.getValue() - newScores.get(score.getKey()));
+                
+                double diff = Math.abs(oldScores.get(uri) - newScores.get(uri));
                 if (diff >= epsilon) {
                     converged = false;
                 }
             }
+            
+            // Step 3: the convergence step should go here.
+            // Return early if we've converged.
+//            boolean converged = true;
+//            for (KVPair<URI, Double> score : oldScores) {
+//                double diff = Math.abs(score.getValue() - newScores.get(score.getKey()));
+//                if (diff >= epsilon) {
+//                    converged = false;
+//                }
+//            }
             if (converged) {
                 return newScores;
             }
