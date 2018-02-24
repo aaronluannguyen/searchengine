@@ -183,4 +183,13 @@ public class TfIdfAnalyzer {
         
         return Math.sqrt(output);
     }
+    
+    private IDictionary<String, Double> getNormOfDocVector(IDictionary<URI, IDictionary<String, Double>> docVector) {
+        IDictionary<String, Double> result = new ChainedHashDictionary<String, Double>();
+        for (KVPair<URI, IDictionary<String, Double>> uriPair : docVector) {
+            double score = norm(docVector.get(uriPair.getKey()));
+            result.put(uriPair.getKey(), score);
+        }
+        return result;
+    }
 }

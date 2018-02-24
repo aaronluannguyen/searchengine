@@ -131,16 +131,6 @@ public class PageRankAnalyzer {
                     converged = false;
                 }
             }
-            
-            // Step 3: the convergence step should go here.
-            // Return early if we've converged.
-//            boolean converged = true;
-//            for (KVPair<URI, Double> score : oldScores) {
-//                double diff = Math.abs(score.getValue() - newScores.get(score.getKey()));
-//                if (diff >= epsilon) {
-//                    converged = false;
-//                }
-//            }
             if (converged) {
                 return newScores;
             }
