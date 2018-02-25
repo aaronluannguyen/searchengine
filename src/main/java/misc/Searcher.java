@@ -1,6 +1,8 @@
 package misc;
 
 
+import java.util.Iterator;
+
 import datastructures.concrete.ArrayHeap;
 import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IList;
@@ -38,24 +40,29 @@ public class Searcher {
             throw new IllegalArgumentException("IllegalArgumentException: k < 0");
         }
         
-        if (k > input.size()) {
-            k = input.size();
-        }
-        
-        IPriorityQueue<T> sorter = new ArrayHeap<T>();
-        for (T item : input) {
-            int sorterSize = sorter.size();
-            if (sorterSize > 0 && item.compareTo(sorter.peekMin()) >= 0) {
-                if (sorterSize >= k)  {
-                    sorter.removeMin();
-                }
-                sorter.insert(item);
-            }
-        }
-        
         IList<T> result = new DoubleLinkedList<T>();
-        while (!sorter.isEmpty()) {
-            result.add(sorter.removeMin());
+        
+        if (k != 0) {
+            if (k > input.size()) {
+                k = input.size();
+            }
+            
+            IPriorityQueue<T> sorter = new ArrayHeap<T>();
+            Iterator<T> itr = input.iterator();
+            for (int i = 0; i < k; i++) {
+                sorter.insert(itr.next());
+            }
+            for (int i = k; i < input.size(); i++) {
+                T item = itr.next();
+                if (item.compareTo(sorter.peekMin()) >= 0) {
+                    sorter.removeMin();
+                    sorter.insert(item);
+                }
+            }
+            
+            while (!sorter.isEmpty()) {
+                result.add(sorter.removeMin());
+            }
         }
         
         return result;
