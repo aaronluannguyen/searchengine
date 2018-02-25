@@ -9,7 +9,7 @@ import misc.exceptions.EmptyContainerException;
 public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     // See spec: you must implement a implement a 4-heap.
     private static final int NUM_CHILDREN = 4;
-    private static final int INIT_ARRAY_SIZING = 1000000;
+    private static final int INIT_ARRAY_SIZING = 100000;
 
     // You MUST use this field to store the contents of your heap.
     // You may NOT rename this field: we will be inspecting it within
