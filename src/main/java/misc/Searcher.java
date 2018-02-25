@@ -44,8 +44,9 @@ public class Searcher {
         
         IPriorityQueue<T> sorter = new ArrayHeap<T>();
         for (T item : input) {
-            if (sorter.size() < k || (sorter.size() > 0 && item.compareTo(sorter.peekMin()) >= 0)) {
-                if (sorter.size() == k)  {
+            int sorterSize = sorter.size();
+            if (sorterSize < k || (sorterSize > 0 && item.compareTo(sorter.peekMin()) >= 0)) {
+                if (sorterSize == k)  {
                     sorter.removeMin();
                 }
                 sorter.insert(item);
