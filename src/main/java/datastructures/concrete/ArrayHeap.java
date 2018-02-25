@@ -9,6 +9,7 @@ import misc.exceptions.EmptyContainerException;
 public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     // See spec: you must implement a implement a 4-heap.
     private static final int NUM_CHILDREN = 4;
+    private static final int INIT_ARRAY_SIZING = 1000000;
 
     // You MUST use this field to store the contents of your heap.
     // You may NOT rename this field: we will be inspecting it within
@@ -19,7 +20,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     // Feel free to add more fields and constants.
 
     public ArrayHeap() {
-        this.heap = makeArrayOfT(20);
+        this.heap = makeArrayOfT(INIT_ARRAY_SIZING);
         length = 0;
     }
 
@@ -97,7 +98,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         
         this.length++;
         
-        if (this.length % 20 == 0) {
+        if (this.length % INIT_ARRAY_SIZING == 0) {
             T[] newHeap = makeArrayOfT(this.length * 2);
             for (int i = 0; i < this.length; i++) {
                 newHeap[i] = this.heap[i];
