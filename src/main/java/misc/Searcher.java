@@ -53,9 +53,12 @@ public class Searcher {
         }
         
         IList<T> result = new DoubleLinkedList<T>();
-        for (int i = 0; i < k; i++) {
+        while (!sorter.isEmpty()) {
             result.add(sorter.removeMin());
         }
+//        for (int i = 0; i < k; i++) {
+//            result.add(sorter.removeMin());
+//        }
         
         return result;
     }
