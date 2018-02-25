@@ -56,9 +56,6 @@ public class Searcher {
         while (!sorter.isEmpty()) {
             result.add(sorter.removeMin());
         }
-//        for (int i = 0; i < k; i++) {
-//            result.add(sorter.removeMin());
-//        }
         
         return result;
     }
