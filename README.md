@@ -1,4 +1,4 @@
-# CSE Project Search Engine
+# CSE Search Engine Project 
 Project helped us build a mini version of Google's Search Engine
 - Implemented jUnit tests for ArrayHeap and Searcher.topKSort() classes/methods
 - Implmented an ArrayHeap class
